@@ -1,21 +1,18 @@
 const db = require('./db');
-/*
-const Author = require('./Author')
-const Comment = require('./Comment')
-const Story = require('./Story')
 
-Author.hasMany(Story)
-Story.belongsTo(Author)
+const Game = require('./Game');
+const Pick = require('./Pick');
+const Player = require('./Player');
 
-Author.hasMany(Comment)
-Comment.belongsTo(Author)
+Pick.belongsTo(Game);
+Game.hasMany(Pick);
 
-Story.hasMany(Comment)
-Comment.belongsTo(Story)
-*/
+Pick.belongsTo(Player);
+Player.hasMany(Pick);
+
 module.exports = {
   db,
-  //Author,
-  //Comment,
-  //Story
+  Game,
+  Pick,
+  Player,
 };
