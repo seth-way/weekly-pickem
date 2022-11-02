@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-// place routes here
-// ex. router.use('/stories', require('./stories'))
+router.use('/games', require('./games'));
+router.use('/picks', require('./picks'));
+router.use('/users', require('./users'));
 
 module.exports = router;

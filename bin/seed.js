@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { parse } = require('csv-parse');
-const { db, Game, Pick, Player } = require('../server/db');
+const { db, Game, Pick, User } = require('../server/db');
 
 const gameDates = {
   1: new Date(2022, 8, 12),
@@ -15,16 +15,27 @@ const gameDates = {
 const seed = async () => {
   await db.sync({ force: true });
 
-  const test = fs.readFileSync('./bin/games/week1.csv').toString().split('\n');
-  const test2 = fs.readFileSync('./bin/picks/week1.csv').toString().split('\n');
-  console.log(test);
+  // Create Players object where key is player name and
+  // value is player object
+  const createUsers = async () => {
+    const users = { T: null, K: null, E: null, S: null, B: null, A: null };
+    for (const name in users) {
+      const admin = name === 'S' ? true : false;
+      users[name] = await User.create({ name, admin });
+    }
+    return users;
+  };
 
+  const users = await createUsers();
+
+  // 1 week at a time
   for (let i = 1; i < 8; i += 1) {
     const gamesCSV = fs
       .readFileSync(`./bin/games/week${i}.csv`)
       .toString()
       .split('\n');
 
+    // Create an array of this weeks game objects
     const games = await Promise.all(
       gamesCSV.map(async row => {
         let [awayPts, away, spread, home, homePts] = row.split(',');
@@ -60,6 +71,49 @@ const seed = async () => {
       .readFileSync(`./bin/picks/week${i}.csv`)
       .toString()
       .split('\n');
+
+    if (picksCSV[picksCSV.length - 1] === '') picksCSV.pop();
+
+    const thisWeeksPlayers = picksCSV[0]
+      .split(',')
+      .map(player => player.replace(/[^A-Z]/g, ''));
+
+    const tieBreakers = picksCSV[picksCSV.length - 1]
+      .split(',')
+      .map(score => score.replace(/[^0-9]/g, '-'));
+
+    for (let i = 1; i < picksCSV.length - 1; i += 1) {
+      const gameIdx = i - 1;
+      const picks = picksCSV[i]
+        .split(',')
+        .map(pick => pick.replace(/[^A-Z]/g, ''));
+
+      for (const [idx, choice] of picks.entries()) {
+        const gameId = games[gameIdx].id;
+        const userId = users[thisWeeksPlayers[idx]].id;
+        const success = choice === games[gameIdx].winner ? 'win' : 'loss';
+
+        let tiebreaker = false;
+        let homePts = null;
+        let awayPts = null;
+
+        if (i === picksCSV.length - 2) {
+          tiebreaker = true;
+          awayPts = parseInt(tieBreakers[idx].split('-')[0]);
+          homePts = parseInt(tieBreakers[idx].split('-')[1]);
+        }
+
+        await Pick.create({
+          choice,
+          gameId,
+          userId,
+          success,
+          tiebreaker,
+          homePts,
+          awayPts,
+        });
+      }
+    }
   }
 
   db.close();
