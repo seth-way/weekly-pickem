@@ -7,6 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { connect } from 'react-redux';
 import { fetchUser } from '../store/reducers/user';
+import { fetchWeek } from '../store/reducers/week';
 
 const users = {
   T: 1,
@@ -23,12 +24,18 @@ class AppNavbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { user: props.user };
-    this.handleSelect = this.handleSelect.bind(this);
+    this.handleUserSelect = this.handleUserSelect.bind(this);
+    this.handleGameSelect = this.handleGameSelect.bind(this);
   }
 
-  handleSelect(id) {
+  handleUserSelect(id) {
     const { updateUser } = this.props;
     updateUser(id);
+  }
+
+  handleGameSelect(week) {
+    const { fetchSingleWeek } = this.props;
+    fetchSingleWeek(week);
   }
 
   componentDidUpdate(prev) {
@@ -55,9 +62,10 @@ class AppNavbar extends React.Component {
           <Nav className='me-auto'>
             <DropdownButton
               as={ButtonGroup}
-              title='Group Picks'
+              title='Results'
               size='sm'
               variant='info'
+              onSelect={this.handleGameSelect}
             >
               {weeks.map(week => (
                 <Dropdown.Item
@@ -66,26 +74,33 @@ class AppNavbar extends React.Component {
                 >{`Week ${week}`}</Dropdown.Item>
               ))}
             </DropdownButton>
-            {/* RENDER USER PICK OPTIONS ONLY IF USER HAS BEEN SELECTED */}
-            {user.id ? (
+            {/* RENDER ADMIN OPTIONS ONLY IF USER IS AN ADMIN */}
+            {user.admin ? (
               <>
                 <DropdownButton
                   as={ButtonGroup}
-                  title='My Picks'
+                  title='Admin'
                   size='sm'
-                  variant='warning'
+                  variant='success'
                 >
-                  {weeks.map(week => (
-                    <Dropdown.Item
-                      href={`#/picks/${week}/users/${user.id}`}
-                      eventKey={week}
-                    >{`Week ${week}`}</Dropdown.Item>
-                  ))}
+                  <Dropdown.Item href='#/admin/addGames'>
+                    Add Games
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#/admin/updateGames'>
+                    Update Scores
+                  </Dropdown.Item>
                 </DropdownButton>
+              </>
+            ) : (
+              ''
+            )}
+            {/* RENDER USER PICK OPTIONS ONLY IF USER HAS BEEN SELECTED */}
+            {user.id ? (
+              <>
                 <Nav.Link>Make Picks</Nav.Link>
               </>
             ) : (
-              <div />
+              ''
             )}
           </Nav>
           {loginMessage()}
@@ -93,7 +108,7 @@ class AppNavbar extends React.Component {
             as={ButtonGroup}
             variant={user && user.id ? 'primary' : 'danger'}
             title='User'
-            onSelect={this.handleSelect}
+            onSelect={this.handleUserSelect}
             align='end'
           >
             {Object.entries(users).map(([username, id]) => (
@@ -113,6 +128,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
   updateUser: id => dispatch(fetchUser(id)),
+  fetchSingleWeek: week => dispatch(fetchWeek(week)),
 });
 
 export default connect(mapState, mapDispatch)(AppNavbar);

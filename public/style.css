@@ -1,3 +1,56 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.form {
+  background-color: darkgray;
+  border: thick solid darkslategrey;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.align-items-center {
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
 .justify-content-end {
   margin-right: 10px;
+}
+
+.winner {
+  filter: drop-shadow(0px 0px 10px #00ff88) brightness(1.25);
+}
+
+.loser {
+  filter: grayscale(50%) brightness(0.75);
+}
+
+.leader {
+  color: #00ff88;
+}
+
+.other {
+  color: salmon;
+}
+
+.add_games_container > * {
+  margin: 10px;
+}
+
+#body {
+  display: flex;
+  justify-content: center;
+  padding: 25px;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+td img {
+  height: 30px;
 }

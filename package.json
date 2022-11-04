@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "start": "node server",
-    "start-dev": "webpack -w & nodemon server/main.js",
+    "start-dev": "NODE_ENV=development webpack -w & nodemon server/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node bin/seed.js"
   },
@@ -17,6 +17,7 @@
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.2",
     "csv-parse": "^5.3.1",
+    "dayjs": "^1.11.6",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.8.0",

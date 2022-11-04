@@ -5,6 +5,8 @@ import { fetchGames } from '../store/reducers/games';
 import Navbar from './Navbar';
 import AllResults from './AllResults';
 import AllGamesByWeek from './AllGamesByWeek';
+import AddGames from './AddGames';
+import UpdateGames from './UpdateGames';
 
 class App extends React.Component {
   componentDidMount() {
@@ -17,10 +19,14 @@ class App extends React.Component {
         <div>
           <Navbar />
         </div>
-        <Routes>
-          <Route path='/' element={<AllResults />} />
-          <Route path='/picks/:week' element={<AllGamesByWeek />} />
-        </Routes>
+        <div id='body'>
+          <Routes>
+            <Route path='/' element={<AllResults />} />
+            <Route exact path='/games/:week' element={<AllGamesByWeek />} />
+            <Route exact path='/admin/addGames' element={<AddGames />} />
+            <Route exact path='/admin/updateGames' element={<UpdateGames />} />
+          </Routes>
+        </div>
       </div>
     );
   }
