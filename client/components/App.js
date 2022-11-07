@@ -10,6 +10,7 @@ import AddGames from './AddGames';
 import UpdateScores from './UpdateScores';
 import MakePicks from './MakePicks';
 import AddResults from './AddResults';
+import { fetchPicks } from '../store/reducers/picks';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class App extends React.Component {
   componentDidMount() {
     this.props.loadGames();
     this.props.loadResults();
+    this.props.loadPicks();
   }
 
   componentDidUpdate(prev) {
@@ -66,6 +68,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   loadGames: () => dispatch(fetchGames()),
   loadResults: () => dispatch(fetchResults()),
+  loadPicks: () => dispatch(fetchPicks()),
 });
 
 export default connect(mapState, mapDispatch)(App);
