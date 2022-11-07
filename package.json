@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "node server/main.js",
+    "start": "node bin/seed.js && node server/main.js",
     "start-dev": "NODE_ENV=development webpack -w & nodemon server/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",

@@ -22,7 +22,7 @@ const results = [
 ];
 
 const seed = async () => {
-  await db.sync({ force: true });
+  await db.sync();
 
   await Promise.all(results.map(async result => Result.create(result)));
 
