@@ -7,6 +7,7 @@
     "start": "node server",
     "start-dev": "NODE_ENV=development webpack -w & nodemon server/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "seed": "node bin/seed.js"
   },
   "keywords": [],
