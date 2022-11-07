@@ -12770,9 +12770,15 @@ var AppNavbar = /*#__PURE__*/function (_React$Component) {
       user: props.user
     };
     _this.handleUserSelect = _this.handleUserSelect.bind(_assertThisInitialized(_this));
+    _this.handleWeekSelect = _this.handleWeekSelect.bind(_assertThisInitialized(_this));
     return _this;
   }
   _createClass(AppNavbar, [{
+    key: "handleWeekSelect",
+    value: function handleWeekSelect(week) {
+      this.props.fetchSingleWeek(week);
+    }
+  }, {
     key: "handleUserSelect",
     value: function handleUserSelect(id) {
       var updateUser = this.props.updateUser;
@@ -12791,6 +12797,7 @@ var AppNavbar = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
       var user = this.state.user;
       var _this$props = this.props,
         latestWeek = _this$props.latestWeek,
@@ -12811,11 +12818,15 @@ var AppNavbar = /*#__PURE__*/function (_React$Component) {
         as: react_bootstrap_ButtonGroup__WEBPACK_IMPORTED_MODULE_9__["default"],
         title: "Results",
         size: "sm",
-        variant: "info"
+        variant: "info",
+        handleSelect: this.handleWeekSelect
       }, weeks.map(function (week) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Dropdown__WEBPACK_IMPORTED_MODULE_10__["default"].Item, {
           href: "#/games/".concat(week),
-          eventKey: week
+          eventKey: week,
+          onClick: function onClick() {
+            return _this2.handleWeekSelect(week);
+          }
         }, "Week ".concat(week));
       })), user.admin ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_DropdownButton__WEBPACK_IMPORTED_MODULE_8__["default"], {
         as: react_bootstrap_ButtonGroup__WEBPACK_IMPORTED_MODULE_9__["default"],

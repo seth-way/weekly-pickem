@@ -26,6 +26,11 @@ class AppNavbar extends React.Component {
     super(props);
     this.state = { user: props.user };
     this.handleUserSelect = this.handleUserSelect.bind(this);
+    this.handleWeekSelect = this.handleWeekSelect.bind(this);
+  }
+
+  handleWeekSelect(week) {
+    this.props.fetchSingleWeek(week);
   }
 
   handleUserSelect(id) {
@@ -61,11 +66,13 @@ class AppNavbar extends React.Component {
               title='Results'
               size='sm'
               variant='info'
+              handleSelect={this.handleWeekSelect}
             >
               {weeks.map(week => (
                 <Dropdown.Item
                   href={`#/games/${week}`}
                   eventKey={week}
+                  onClick={() => this.handleWeekSelect(week)}
                 >{`Week ${week}`}</Dropdown.Item>
               ))}
             </DropdownButton>
