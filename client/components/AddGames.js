@@ -31,35 +31,7 @@ class AddGames extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  /*
-  async componentDidUpdate(prev) {
-    if (
-      prev.week.games !== this.props.week.games ||
-      (prev.week.games &&
-        this.props.week.games &&
-        Object.keys(prev.week.games).length !==
-          Object.keys(this.props.week.games).length)
-    ) {
-      const { week } = this.state;
-      if (week) {
-        const games = [];
 
-        await this.props.fetchSingleWeek(week);
-
-        if (this.props.week.games) {
-          Object.values(this.props.week.games).forEach(game => {
-            const { id, away, home, spread, start } = game;
-            games.push({ id, away, home, spread, start });
-          });
-        }
-
-        games.sort((a, b) => new Date(a.start) - new Date(b.start));
-
-        this.setState({ games });
-      }
-    }
-  }
-  */
   async handleWeekChange(e) {
     const week = e.target.value;
     const games = [];

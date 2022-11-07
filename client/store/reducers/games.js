@@ -3,6 +3,7 @@ import axios from 'axios';
 // ACTIONS
 const SET_GAMES = 'SET_GAMES';
 const ADD_GAME = 'ADD_GAME';
+const COMPLETE_GAME = 'COMPLETE_GAME';
 
 // ACTION CREATORS
 const setGames = (games, status) => {
@@ -16,6 +17,13 @@ const setGames = (games, status) => {
 const addGame = game => {
   return {
     type: ADD_GAME,
+    game,
+  };
+};
+
+const completeGame = game => {
+  return {
+    type: COMPLETE_GAME,
     game,
   };
 };
@@ -35,19 +43,7 @@ export const fetchGames = () => {
   };
 };
 
-export const fetchGamesByWeek = week => {
-  return async dispatch => {
-    try {
-      const { data } = await axios.get(`/api/games/${week}`);
-      dispatch(setGames(data, 'weekly'));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-};
-
 export const addNewGame = game => {
-  console.log('THUNK HIT.... GAME INFO.... ', game);
   return async dispatch => {
     try {
       const { data } = await axios.post('/api/games', game);
@@ -58,8 +54,19 @@ export const addNewGame = game => {
   };
 };
 
+export const completeSingleGame = game => {
+  return async dispatch => {
+    try {
+      const { data } = await axios.put(`/api/games/${game.id}`, game);
+      dispatch(completeGame(data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 // REDUCER
-const initialState = { completed: [], pending: [], weekly: [] };
+const initialState = { completed: [], pending: [] };
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -67,6 +74,14 @@ export default (state = initialState, action) => {
       return { ...state, [action.status]: action.games };
     case ADD_GAME:
       return { ...state, pending: [...state.pending, action.game] };
+    case COMPLETE_GAME:
+      return {
+        completed: [...state.completed, action.game],
+        pending: state.pending.filter(game => game.id !== action.game.id),
+        weekly: state.weekly.map(game =>
+          game.id === action.game.id ? action.game : game
+        ),
+      };
     default:
       return state;
   }

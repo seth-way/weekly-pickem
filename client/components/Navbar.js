@@ -7,6 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { connect } from 'react-redux';
 import { fetchUser } from '../store/reducers/user';
+import { fetchGames } from '../store/reducers/games';
 import { fetchWeek } from '../store/reducers/week';
 
 const users = {
@@ -25,17 +26,11 @@ class AppNavbar extends React.Component {
     super(props);
     this.state = { user: props.user };
     this.handleUserSelect = this.handleUserSelect.bind(this);
-    this.handleGameSelect = this.handleGameSelect.bind(this);
   }
 
   handleUserSelect(id) {
     const { updateUser } = this.props;
     updateUser(id);
-  }
-
-  handleGameSelect(week) {
-    const { fetchSingleWeek } = this.props;
-    fetchSingleWeek(week);
   }
 
   componentDidUpdate(prev) {
@@ -46,6 +41,7 @@ class AppNavbar extends React.Component {
 
   render() {
     const { user } = this.state;
+    const { latestWeek, loadGames } = this.props;
 
     const loginMessage = () => (
       <Navbar.Collapse className='justify-content-end'>
@@ -65,7 +61,6 @@ class AppNavbar extends React.Component {
               title='Results'
               size='sm'
               variant='info'
-              onSelect={this.handleGameSelect}
             >
               {weeks.map(week => (
                 <Dropdown.Item
@@ -86,8 +81,11 @@ class AppNavbar extends React.Component {
                   <Dropdown.Item href='#/admin/addGames'>
                     Add Games
                   </Dropdown.Item>
-                  <Dropdown.Item href='#/admin/updateGames'>
+                  <Dropdown.Item href='#/admin/updateScores'>
                     Update Scores
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#/admin/addResults'>
+                    Add Results
                   </Dropdown.Item>
                 </DropdownButton>
               </>
@@ -97,7 +95,9 @@ class AppNavbar extends React.Component {
             {/* RENDER USER PICK OPTIONS ONLY IF USER HAS BEEN SELECTED */}
             {user.id ? (
               <>
-                <Nav.Link>Make Picks</Nav.Link>
+                <Nav.Link href='#/makePicks' onClick={() => loadGames()}>
+                  Make Picks
+                </Nav.Link>
               </>
             ) : (
               ''
@@ -128,6 +128,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
   updateUser: id => dispatch(fetchUser(id)),
+  loadGames: () => dispatch(fetchGames()),
   fetchSingleWeek: week => dispatch(fetchWeek(week)),
 });
 

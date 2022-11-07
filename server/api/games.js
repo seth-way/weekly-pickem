@@ -1,6 +1,34 @@
 const router = require('express').Router();
 const { Game, Pick, Player } = require('../db');
 
+// put /api/games/:id
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const game = await Game.findByPk(id);
+
+    Object.entries(req.body).forEach(([key, value]) => {
+      game[key] = value;
+    });
+
+    if (req.body.awayPts && req.body.homePts) {
+      if (req.body.awayPts + game.spread > req.body.homePts) {
+        game.winner = game.away;
+      }
+
+      if (req.body.awayPts + game.spread < req.body.homePts) {
+        game.winner = game.home;
+      }
+    }
+
+    await game.save();
+
+    res.status(201).send(game);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // get /api/games
 router.get('/', async (req, res, next) => {
   try {

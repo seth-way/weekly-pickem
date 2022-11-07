@@ -3,6 +3,7 @@ const db = require('./db');
 const Game = require('./Game');
 const Pick = require('./Pick');
 const User = require('./User');
+const Result = require('./Result');
 
 Pick.belongsTo(Game);
 Game.hasMany(Pick);
@@ -15,4 +16,5 @@ module.exports = {
   Game,
   Pick,
   User,
+  Result,
 };

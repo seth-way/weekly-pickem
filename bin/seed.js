@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { parse } = require('csv-parse');
-const { db, Game, Pick, User } = require('../server/db');
+const { db, Game, Pick, User, Result } = require('../server/db');
 
 const gameDates = {
   1: new Date(2022, 8, 12),
@@ -12,8 +12,19 @@ const gameDates = {
   7: new Date(2022, 9, 24),
 };
 
+const results = [
+  { week: 1, winners: [4], losers: [1, 2, 3, 5, 6] },
+  { week: 2, winners: [4], losers: [1, 2, 3, 5, 6] },
+  { week: 3, winners: [4], losers: [1, 2, 3, 5, 6] },
+  { week: 4, winners: [6], losers: [1, 2, 3, 5, 4] },
+  { week: 5, winners: [6], losers: [1, 3, 5, 4] },
+  { week: 6, winners: [1], losers: [3, 4, 5, 6] },
+];
+
 const seed = async () => {
   await db.sync({ force: true });
+
+  await Promise.all(results.map(async result => Result.create(result)));
 
   // Create Players object where key is player name and
   // value is player object

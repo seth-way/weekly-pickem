@@ -7,9 +7,14 @@ import { fetchWeek } from '../store/reducers/week';
 class AllGamesByWeek extends React.Component {
   constructor(props) {
     super(props);
-    const { week } = this.props;
-    const { games, users } = week;
-    this.state = { games, users };
+    this.state = { games: {}, users: {} };
+  }
+
+  componentDidMount() {
+    const { fetchSingleWeek } = this.props;
+    // get current week from URL
+    const week = +window.location.href.split('/').pop();
+    fetchSingleWeek(week);
   }
 
   componentDidUpdate(prev) {
